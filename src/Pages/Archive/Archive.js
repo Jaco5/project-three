@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import DeleteBtn from "../../components/DeleteBtn";
-import Jumbotron from "../../components/Jumbotron";
-import API from "../../utils/API";
+import DeleteBtn from "../../Components/DeleteBtn";
+import Jumbotron from "../../Components/Jumbotron";
+import API from "../../Utils/API";
 import { Link } from "react-router-dom";
-import { Col, Row, Container } from "../../components/Grid";
-import { List, ListItem } from "../../components/List";
+import { Col, Row, Container } from "../../Components/Grid";
+import { List, ListItem } from "../../Components/List";
+//import Nav from "./Components/Nav";
 
 class Archive extends Component {
     state = {

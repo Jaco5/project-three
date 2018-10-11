@@ -1,12 +1,12 @@
 
 
 import React, { Component, Fragment } from "react";
-import API from "../../utils/API";
-import { Col, Row, Container } from "../../components/Grid";
+import API from "../../Utils/API";
+import { Col, Row, Container } from "../../Components/Grid";
 import scholar from 'google-scholar';
-import Nav from "./Components/Nav";
+import Nav from "../../Components/Nav";
 
-
+const google =window.google;
 
 class Tree extends Component {
     state = {
@@ -38,7 +38,7 @@ class Tree extends Component {
     };
 
     createTreeData = (object) => {
-        for (const i = 0; i < object.results.length; i++) {
+        for (let i = 0; i < object.results.length; i++) {
             this.state.treeData.push(object.results[i].abstract)
         }
     }
@@ -99,7 +99,7 @@ class Tree extends Component {
                 <Col size="col-6">
                     {/* display the article from resultsObj search w/a save button */}
                 </Col>
-                <div class="col-12" id="wordtree_basic" style="width: 100%; height: 500px;"></div>
+                <div id="wordtree_basic" style={{width: 100+'%', height: 500+"px"}}></div>
             </Fragment>
         )
     };

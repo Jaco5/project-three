@@ -6,10 +6,15 @@
   <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="theme-color" content="#000000">
-  <script type="text/javascript">
-    google.charts.load('current', {packages:['wordtree']});
-    google.charts.setOnLoadCallback(drawSimpleNodeChart)</script>
-  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {packages:['wordtree']});
+      google.charts.setOnLoadCallback(drawChart);
+    </script>
+  
+
+ 
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
   <title>Woooord, tree.</title>
 </head>
