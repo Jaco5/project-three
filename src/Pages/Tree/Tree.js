@@ -1,20 +1,17 @@
-// import {observable} from "mobx"
-// import {observer} from "mobx-react"
-import TreeChart from "../../Components/TreeChart"
+
 import { Input, FormBtn } from "../../Components/Form";
 import React, { Component, Fragment } from "react";
 import API from "../../Utils/API";
 import { Col } from "../../Components/Grid";
 import { Chart } from "react-google-charts";
-// const google = window.google;
-// google.charts.load('current', { packages: ['wordtree'] });
 
-const options = {
+
+let options = {
     wordtree: {
-      format: "implicit",
-      word: "the"
+        format: "implicit",
+        word: "the"
     }
-  };
+};
 
 
 class Tree extends Component {
@@ -23,14 +20,12 @@ class Tree extends Component {
         treeData: [],
         node: "",
         phrase: "",
-        abstract: "",
-        author: "",
-        title: ""
+        relevant: ""
     }
 
 
-    APIsearch = (event) => {
-        
+    APIsearch = () => {
+
         // this.setState({ treeData: [] })
         API.searchAPI(this.phrase)
             .then(async result => {
@@ -43,22 +38,22 @@ class Tree extends Component {
 
     createTreeData = () => {
         let bigArray = []
-        for (var i=0; i<this.state.results.length; i++) {
-            if (this.state.results[i].bibjson.abstract) {
-            let singleArray = [this.state.results[i].bibjson.abstract];
-            console.log(singleArray);
-            bigArray.push(singleArray);
+        for (var i = 0; i < this.state.results.length; i++) {
+            if (this.state.results[i].bibjson.abstract && this.state.results[i].bibjson.abstract != ".") {
+                let singleArray = [this.state.results[i].bibjson.abstract];
+                console.log(singleArray);
+                bigArray.push(singleArray);
             }
         }
-        console.log(bigArray);
+        console.log("big"+bigArray);
         console.log(this.state.results)
         // this.state.results.map( result => {
         //     console.log(result)
         //      this.setState({ treeData: [...this.state.treeData, result.bibjson.abstract] })
-            
+
         // })
-        this.state.results.map( result => {
-             this.setState({ treeData: bigArray });  
+        this.state.results.map(result => {
+            this.setState({ treeData: bigArray });
         });
 
         setTimeout(() => {
@@ -70,8 +65,11 @@ class Tree extends Component {
 
 
     //call this on click after you have entered a phrase
-    relevantAbstracts = () => this.state.results.filter(article => article.abstract.includes(this.state.phrase));
-
+    relevantAbstracts = (event) => {
+        event.preventDefault();
+        const thisArticle = this.state.results.filter(article => article.data.bibjson.abstract.includes(this.state.relevant));
+        console.log("relevant"+thisArticle)
+    };
 
     handleInputChange = event => {
         const { name, value } = event.target;
@@ -87,19 +85,20 @@ class Tree extends Component {
         };
     };
 
-    handleSaveBtn = event => {
-        if (this.state.title && this.state.author && this.state.abstract) {
-            API.saveArticle({
-                title: this.state.title,
-                author: this.state.author,
-                synopsis: this.state.abstract
-            })
-                .then(res => alert("Article archived"))
-                .catch(err => console.log(err));
-        }
-    };
+    // handleSaveBtn = event => {
+    //     if () {
+    //         API.saveArticle({
+    //             title: this.state.title,
+    //             author: this.state.author,
+    //             abstract: this.state.abstract,
+    //             href: 
+    //         })
+    //             .then(res => alert("Article archived"))
+    //             .catch(err => console.log(err));
+    //     }
+    // };
 
-   
+
 
 
     render() {
@@ -108,19 +107,29 @@ class Tree extends Component {
                 <Col size="col-6">
                     {/* search bars for GS and for resultsObj search */}
                     <form>
+                        <p>Use this field to set the tree's node:</p>
                         <Input
                             value={this.state.node}
                             onChange={this.handleInputChange}
                             name="node"
-                            default="The"
-                        // placeholder="This is the node of the tree (required)"
+                            default=""
+                            placeholder="NODE"
+                        />
+                        <p>Use this field to locate a specific article:</p>
+                        <Input
+                            value={this.state.relevant}
+                            onChange={this.handleInputChange}
+                            name="relevant"
+                            default=""
+                            placeholder="Find Article"
                         />
                         <FormBtn
-                            disabled={!(this.state.phrase)}
+                            disabled={!(this.state.relevant)}
                             onClick={this.relevantAbstracts}
                         >
                             Find Article
                             </FormBtn>
+                        <p>Enter your search term here:</p>
                         <Input
                             value={this.state.phrase}
                             onChange={this.handleInputChange}
@@ -131,25 +140,63 @@ class Tree extends Component {
                             disabled={!(this.state.phrase)}
                             onClick={this.handleAPI}
                         >
-                            Google Scholar
+                            Search 
                             </FormBtn>
                     </form>
                 </Col>
-                <Col size="col-6">
-                    {/* display the article from resultsObj search w/a save button */}
-                </Col>
+                {/* <Col size="col-6">
+                <form>
+              <Input
+                value={}
+                onChange={}
+                name="title"
+                placeholder="Title"
+              />
+              <Input
+                value={}
+                onChange={}
+                name="href"
+                placeholder="Hyperlink"
+              />
+              <Input
+                value={}
+                onChange={}
+                name="author"
+                placeholder="Author (required)"
+              />
+              <TextArea
+                value={}
+                onChange={}
+                name="abstract"
+                placeholder="Abstract"
+              />
+              <FormBtn
+                disabled={!(this.state.author && this.state.title)}
+                onClick={this.handleFormSubmit}
+              >
+                Submit Book
+              </FormBtn>
+              </form>
+                </Col> */}
                 <div className={"my-pretty-chart-container"}>
                     <Chart
                         chartType="WordTree"
-                        data={this.state.treedata}
+                        data={this.state.treeData}
                         width="100%"
                         height="400px"
-                        options= {this.options}
-                          
-                          
+                        options= {options ={
+                            wordtree: {
+                                format: "implicit",
+                                word: this.state.node
+                            }
+                        }
+                    }
+
+
                         legendToggle
                     />
                 </div>
+
                 <div id="wordtree_basic" style={{ width: 100 + '%', height: 500 + "px" }}></div>
             </Fragment>
         )
